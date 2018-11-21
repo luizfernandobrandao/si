@@ -1,9 +1,10 @@
 #include <gtk/gtk.h>
+#include <stdlib.h>
 
 gchar *str;
 GtkTextBuffer *buffer, *buffer2;
 GtkTextIter iter, start, end;
-GtkWidget *tview1, *tview2;
+GtkWidget *tview1, *tview2,  *entry;;
 
 gchar * cesar(gchar *str, int tam, int chave) {
   
@@ -19,8 +20,9 @@ gchar * cesar(gchar *str, int tam, int chave) {
 
 void button_clicked(GtkWidget *widget, gpointer data) {
 
-  int tam;
+  int tam, chave;
   gchar *cifrada;
+  const gchar *schave;
 
   buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tview1));
   gtk_text_buffer_get_iter_at_offset(buffer, &iter, 0);
@@ -28,10 +30,10 @@ void button_clicked(GtkWidget *widget, gpointer data) {
   gtk_text_buffer_get_end_iter (buffer, &end);
   str = gtk_text_buffer_get_text(buffer, &start, &end, TRUE);
   tam = strlen(str);
+  schave = gtk_entry_get_text(GTK_ENTRY(entry));
+  chave = atoi (schave);
 
-  cifrada = cesar(str, tam, 1);
-
-  //g_print("%d\n", strlen(str));
+  cifrada = cesar(str, tam, chave);
 
   buffer2 = gtk_text_view_get_buffer(GTK_TEXT_VIEW(tview2));
   gtk_text_buffer_get_iter_at_offset(buffer2, &iter, 0);
@@ -55,6 +57,10 @@ int main(int argc, char *argv[]) {
 
   fixed = gtk_fixed_new();
   gtk_container_add(GTK_CONTAINER(window), fixed);
+  
+  entry = gtk_entry_new();
+  gtk_fixed_put(GTK_FIXED(fixed), entry, 680, 160);
+  gtk_entry_set_placeholder_text (GTK_ENTRY(entry), "Chave");
 
   btn1 = gtk_button_new_with_label("Descifrar");
   gtk_fixed_put(GTK_FIXED(fixed), btn1, 680, 200);
